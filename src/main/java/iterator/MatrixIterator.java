@@ -15,25 +15,23 @@ public class MatrixIterator implements Iterator<Integer> {
     @Override
     public boolean hasNext() {
         boolean result = false;
-        if ((row == 0 && column == 0 && data[0].length != 0) || (row < data[column].length)) {
+        if ((row == 0 && column == 0 && data[row].length != 0) || (row < data[row].length - 1)) {
             return true;
         }
-        if (row == data[column].length && column != data.length - 1) {
-            while (data[column + 1].length == 0) {
-                if (column ==  data.length - 2) {
-                    break;
-                }
-                column++;
-            }
-            column++;
-            if (data[column].length == 0) {
+        if (row == data.length - 1 && column >= data[row].length) {
+            return false;
+        }
+        if (column > data[row].length - 1 && data[row].length != 0) {
+            column = 0;
+            row++;
+        }
+        while (data[row].length == 0) {
+            row++;
+            if (row == data.length) {
                 return false;
-            } else {
-                row = 0;
-                return true;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -41,16 +39,6 @@ public class MatrixIterator implements Iterator<Integer> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        if (row == 0 && column == 0) {
-            row++;
-            return data[0][0];
-        }
-        if (row < data[column].length) {
-            row++;
-            return data[column][row - 1];
-        } else {
-            row = 0;
-        }
-        return data[column][row];
+        return data[row][column++];
     }
 }
