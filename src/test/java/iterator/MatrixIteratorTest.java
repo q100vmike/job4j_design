@@ -3,8 +3,6 @@ package iterator;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 class MatrixIteratorTest  {
