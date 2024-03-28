@@ -39,6 +39,7 @@ class MatrixIteratorTest  {
         int[][] input = {
                 {1}, {2, 3}, {}, {}, {4}
         };
+
         MatrixIterator iterator = new MatrixIterator(input);
         assertThat(iterator.next()).isEqualTo(1);
         assertThat(iterator.next()).isEqualTo(2);
