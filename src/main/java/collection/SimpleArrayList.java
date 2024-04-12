@@ -15,9 +15,16 @@ public class SimpleArrayList<T> implements SimpleList<T> {
         container = (T[]) new Object[capacity];
     }
 
+    private void expland() {
+        container = Arrays.copyOf(container, container.length * 2);
+    }
     @Override
     public void add(T value) {
-        container[size + 1] = value;
+        if (container.length == size) {
+            expland();
+        }
+        container[size] = value;
+        size++;
     }
 
     @Override
@@ -30,6 +37,14 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     @Override
     public T remove(int index) {
         Objects.checkIndex(index, container.length);
+        T[] temp = container.clone();
+        if (index > 0) {
+            System.arraycopy(container, 0, temp, 0, index - 1);
+            System.arraycopy(container, index, temp, index, temp.length);
+        } else {
+            System.arraycopy(container, 0, temp, 1, index - 1);
+        }
+
         return null;
     }
 
@@ -50,11 +65,15 @@ public class SimpleArrayList<T> implements SimpleList<T> {
 
             @Override
             public boolean hasNext() {
+
                 return false;
             }
 
             @Override
             public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
                 return null;
             }
         };
