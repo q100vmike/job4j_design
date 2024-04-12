@@ -56,7 +56,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
 
     @Override
     public int size() {
-        return container.length;
+        return size;
     }
 
     @Override

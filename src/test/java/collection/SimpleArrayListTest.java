@@ -31,7 +31,6 @@ class SimpleArrayListTest {
     @Test
     void whenAddThenSizeIncrease() {
         list.add(4);
-        int t = list.size();
         assertThat(list.size()).isEqualTo(4);
     }
 
