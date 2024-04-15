@@ -28,7 +28,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
 
     @Override
     public T set(int index, T newValue) {
-        Objects.checkIndex(index, container.length);
+        Objects.checkIndex(index, size);
         if (index + 1 > size) {
             throw new IndexOutOfBoundsException();
         }
@@ -39,7 +39,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, container.length);
+        Objects.checkIndex(index, size);
         if (index + 1 > size) {
             throw new IndexOutOfBoundsException();
         }
@@ -59,7 +59,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
 
     @Override
     public T get(int index) {
-        int i = Objects.checkIndex(index, container.length);
+        int i = Objects.checkIndex(index, size);
         if (index > size) {
             throw new IndexOutOfBoundsException();
         }
