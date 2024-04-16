@@ -34,13 +34,13 @@ public class SimpleLinkedList<E> implements SimpleLinked<E> {
     @Override
     public E get(int index) {
         Objects.checkIndex(index, size);
-        Node node = head;
+        Node<E> node = head;
 
         while (index != 0) {
             node = node.next;
             index--;
         }
-        return (E) node.item;
+        return node.item;
     }
 
     @Override
@@ -62,9 +62,9 @@ public class SimpleLinkedList<E> implements SimpleLinked<E> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                E curr = (E) node.item;
+                Node<E> curr = node;
                 node = node.next;
-                return curr;
+                return curr.item;
             }
         };
     }
