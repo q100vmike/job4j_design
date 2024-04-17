@@ -1,5 +1,6 @@
 package collection;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class SimpleQueue<T> {
@@ -10,7 +11,13 @@ public class SimpleQueue<T> {
 
     public T poll() {
         counter--;
-        return input.pop();
+        T pop = null;
+        try {
+            pop = input.pop();
+        } catch (NoSuchElementException e) {
+            throw new NoSuchElementException("Queue is empty");
+        }
+        return pop;
     }
 
     public void push(T value) {
