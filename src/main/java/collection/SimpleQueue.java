@@ -10,14 +10,11 @@ public class SimpleQueue<T> {
     private int counter;
 
     public T poll() {
-        counter--;
-        T pop = null;
-        try {
-            pop = input.pop();
-        } catch (NoSuchElementException e) {
+        if (counter == 0) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return pop;
+        counter--;
+        return input.pop();
     }
 
     public void push(T value) {
