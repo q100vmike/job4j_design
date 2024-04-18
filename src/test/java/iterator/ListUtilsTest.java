@@ -34,6 +34,12 @@ class ListUtilsTest {
     }
 
     @Test
+    void whenAddAfterLast() {
+        ListUtils.addAfter(input, 1, 4);
+        assertThat(input).hasSize(3).containsSequence(1, 3, 4);
+    }
+
+    @Test
     void whenRemoveIfGraterThe3() {
         ListUtils.addAfter(input, 0, 2);
         ListUtils.addAfter(input, 2, 4);
