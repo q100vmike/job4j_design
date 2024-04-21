@@ -34,6 +34,6 @@ public class ListUtils {
     }
 
     public static <T> void removeAll(List<T> list, List<T> elements) {
-        elements.stream().forEach(l -> ListUtils.removeIf(list, k -> Objects.equals(l, k)));
+        ListUtils.removeIf(list, elements::contains);
     }
 }
