@@ -17,7 +17,7 @@ public class User {
     }
 
     public static void main(String[] args) {
-        Calendar calendar = new GregorianCalendar(2024, Calendar.MARCH , 24);
+        Calendar calendar = new GregorianCalendar(2024, Calendar.MARCH, 24);
 
         User user1 = new User("Mike", 1, calendar);
         User user2 = new User("Mike", 1, calendar);
