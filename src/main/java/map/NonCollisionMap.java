@@ -16,7 +16,17 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
 
     @Override
     public boolean put(K key, V value) {
-        return false;
+        if (((float) count / capacity) >= LOAD_FACTOR) {
+            expand();
+        }
+        int index = indexFor(hash(Objects.hashCode(key)));
+        if (Objects.nonNull(table[index])) {
+            return false;
+        }
+        table[index] = new MapEntry<>(key, value);
+        count++;
+        modCount++;
+        return true;
     }
 
     private int hash(int hashCode) {
@@ -28,33 +38,64 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
     }
 
     private void expand() {
-
+        capacity *= 2;
+        int index;
+        MapEntry<K, V>[] newTable = new MapEntry[capacity];
+        for (MapEntry item : table) {
+           if (Objects.nonNull(item)) {
+               index = indexFor(hash(Objects.hashCode(item.key)));
+               newTable[index] = new MapEntry<>((K) item.key, (V) item.value);
+           }
+        }
+        table = newTable;
     }
 
     @Override
     public V get(K key) {
+        int index = indexFor(hash(Objects.hashCode(key)));
+        if (Objects.nonNull(table[index])) {
+            if (Objects.hashCode(table[index].key) == Objects.hashCode(key)) {
+                if (Objects.equals(table[index].key, key)) {
+                    return table[index].value;
+                }
+            }
+        }
         return null;
     }
 
     @Override
     public boolean remove(K key) {
+        int index = indexFor(hash(Objects.hashCode(key)));
+        if (Objects.nonNull(table[index])) {
+            if (Objects.hashCode(table[index].key) == Objects.hashCode(key)) {
+                if (Objects.equals(table[index].key, key)) {
+                    table[index] = null;
+                    count--;
+                    modCount++;
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
     @Override
     public Iterator<K> iterator() {
         return new Iterator<K>() {
-            private Integer[] data;
-            private int index;
-/*            public iterator(Integer[] data) {
-                this.data = data;
-            }*/
+
+            private int index = 0;
+
+            private int expectedModCount = modCount;
+
             @Override
             public boolean hasNext() {
+                if (expectedModCount != modCount) {
+                    throw new ConcurrentModificationException();
+                }
                 while (index < table.length && table[index] == null) {
                     index++;
                 }
-                return index < data.length;
+                return index < table.length;
             }
 
             @Override
@@ -62,13 +103,12 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                return table[index++];
+                return table[index++].key;
             }
         };
     }
 
     private static class MapEntry<K, V> {
-
         K key;
         V value;
 
@@ -79,11 +119,7 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
     }
 
     public static void main(String[] args) {
-/*        что вызов метода map.hash(0) вернет 0, вызов map.hash(65535) вернет 65535, а
-        вызов map.hash(65536) вернет 65537. Для метода indexFor(int hash) должно быть так:  \
-        вызов map.indexFor(0) вернет 0, вызов map.indexFor(7) вернет 7, вызов map.indexFor(8) вернет 0.*/
         NonCollisionMap<Integer, Object> map = new NonCollisionMap<>();
-        //Map<User, Object> map = new HashMap<>();
         int hash = map.hash(0);
         hash = map.hash(65536);
         int index = map.indexFor(0);

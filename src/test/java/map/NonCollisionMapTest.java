@@ -90,6 +90,7 @@ class NonCollisionMapTest {
 
     @Test
     void whenMapExpand() {
+        float t = ((float) 2 / 8);
         map.put(null, "0000");
         assertThat(map.put(15, "15")).isTrue();
         assertThat(map).hasSize(6);
