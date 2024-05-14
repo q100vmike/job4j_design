@@ -16,10 +16,10 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
 
     @Override
     public boolean put(K key, V value) {
-        if (((float) count / capacity) >= LOAD_FACTOR) {
+        if ((count * 1.0f / capacity) >= LOAD_FACTOR) {
             expand();
         }
-        int index = indexFor(hash(Objects.hashCode(key)));
+        int index = indexKey(key);
         if (Objects.nonNull(table[index])) {
             return false;
         }
@@ -37,14 +37,18 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
         return hash & (capacity - 1);
     }
 
+    private int indexKey(K key) {
+        return hash(Objects.hashCode(key)) & (capacity - 1);
+    }
+
     private void expand() {
         capacity *= 2;
         int index;
         MapEntry<K, V>[] newTable = new MapEntry[capacity];
         for (MapEntry item : table) {
            if (Objects.nonNull(item)) {
-               index = indexFor(hash(Objects.hashCode(item.key)));
-               newTable[index] = new MapEntry<>((K) item.key, (V) item.value);
+               index = indexKey((K) item.key);
+               newTable[index] = new MapEntry(item.key, item.value);
            }
         }
         table = newTable;
@@ -52,16 +56,13 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
 
     @Override
     public V get(K key) {
-        int index = indexFor(hash(Objects.hashCode(key)));
-        if (checkKey(table[index], key)) {
-                    return table[index].value;
-        }
-        return null;
+        int index = indexKey(key);
+        return (checkKey(table[index], key)) ? table[index].value : null;
     }
 
     @Override
     public boolean remove(K key) {
-        int index = indexFor(hash(Objects.hashCode(key)));
+        int index = indexKey(key);
         if (checkKey(table[index], key)) {
                     table[index] = null;
                     count--;
@@ -72,12 +73,10 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
     }
 
     private boolean checkKey(MapEntry<K, V> el, K key) {
-        if (Objects.nonNull(el)
+        boolean b = (Objects.nonNull(el)
                 && (Objects.hashCode(el.key) == Objects.hashCode(key))
-                && (Objects.equals(el.key, key))) {
-            return true;
-        }
-        return false;
+                && (Objects.equals(el.key, key))) ? true : false;
+        return b;
     }
 
     @Override
