@@ -73,10 +73,9 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
     }
 
     private boolean checkKey(MapEntry<K, V> el, K key) {
-        boolean b = (Objects.nonNull(el)
+        return Objects.nonNull(el)
                 && (Objects.hashCode(el.key) == Objects.hashCode(key))
-                && (Objects.equals(el.key, key))) ? true : false;
-        return b;
+                && (Objects.equals(el.key, key));
     }
 
     @Override
