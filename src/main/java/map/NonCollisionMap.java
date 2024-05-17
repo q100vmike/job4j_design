@@ -20,13 +20,13 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
             expand();
         }
         int index = indexKey(key);
-        if (Objects.nonNull(table[index])) {
-            return false;
+        boolean rsl = Objects.isNull(table[index]);
+        if (rsl) {
+            table[index] = new MapEntry<>(key, value);
+            count++;
+            modCount++;
         }
-        table[index] = new MapEntry<>(key, value);
-        count++;
-        modCount++;
-        return true;
+        return rsl;
     }
 
     private int hash(int hashCode) {
@@ -44,11 +44,7 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
     private void expand() {
         capacity *= 2;
         MapEntry<K, V>[] newTable = new MapEntry[capacity];
-        for (MapEntry item : table) {
-           if (Objects.nonNull(item)) {
-               newTable[indexKey((K) item.key)] = item;
-           }
-        }
+        Arrays.stream(table).forEach(k -> newTable[indexKey(k.key)] = k);
         table = newTable;
     }
 
