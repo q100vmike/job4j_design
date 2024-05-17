@@ -44,7 +44,9 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
     private void expand() {
         capacity *= 2;
         MapEntry<K, V>[] newTable = new MapEntry[capacity];
-        Arrays.stream(table).forEach(k -> newTable[indexKey(k.key)] = k);
+        if (Objects.nonNull(table)) {
+            Arrays.stream(table).forEach(k -> newTable[indexKey(k.key)] = k);
+        }
         table = newTable;
     }
 
