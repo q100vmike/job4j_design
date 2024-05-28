@@ -18,30 +18,37 @@ public class Info {
         return added;
     }
 
-    public void setAdded(int added) {
-        this.added = added;
+    public void setAdded() {
+        this.added++;
     }
 
     public int getChanged() {
         return changed;
     }
 
-    public void setChanged(int changed) {
-        this.changed = changed;
+    public void setChanged() {
+        this.changed++;
     }
 
     public int getDeleted() {
         return deleted;
     }
 
+    public void setDeleted() {
+        this.deleted++;
+    }
     public void setDeleted(int deleted) {
         this.deleted = deleted;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Info info = (Info) o;
         return added == info.added && changed == info.changed && deleted == info.deleted;
     }
