@@ -25,7 +25,7 @@ public class Config {
                     .filter(l -> !l.isEmpty())
                     .filter(l -> {
                         if (!l.matches("^.+=.+$")) {
-                            throw new IllegalArgumentException("not possible inside yml file");
+                            throw new IllegalArgumentException("not possible inside yml file!");
                         }
                         return true;
                     })
