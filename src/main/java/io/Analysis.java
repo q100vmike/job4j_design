@@ -4,22 +4,23 @@ import java.util.StringJoiner;
 
 public class Analysis {
     public void unavailable(String source, String target) {
-        boolean start = true;
-        int counter = 0;
-        StringJoiner output = new StringJoiner(";");
+        boolean start = false;
+        StringJoiner output = new StringJoiner("");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(source))) {
             String line = reader.readLine();
             while (line != null) {
-                if ((line.startsWith("400") || line.startsWith("500")) && start) {
-                    output.add(line.substring(4));
-                    counter++;
-                    if (counter % 2 == 0) {
-                        output.add(System.lineSeparator());
+                if (line.startsWith("400") || line.startsWith("500")) {
+                    if (!start) {
+                        output.add(line.substring(4) + ";");
+                        start = true;
                     }
-                    start = false;
                 } else {
-                    start = true;
+                    if (start) {
+                        output.add(line.substring(4) + ";");
+                        output.add(System.lineSeparator());
+                        start = false;
+                    }
                 }
                 line = reader.readLine();
             }
