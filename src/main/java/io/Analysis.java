@@ -5,7 +5,6 @@ import java.util.StringJoiner;
 public class Analysis {
     public void unavailable(String source, String target) {
         boolean start = false;
-        StringJoiner output = new StringJoiner("");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(source))) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(target))) {
