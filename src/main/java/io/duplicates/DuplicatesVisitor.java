@@ -22,12 +22,11 @@ public class DuplicatesVisitor extends SimpleFileVisitor<Path> {
     public FileVisitResult visitFile(Path file,
                                      BasicFileAttributes attributes) throws IOException {
         FileProperty fileProperty = new FileProperty(attributes.size(), file.getFileName().toString());
-        map.computeIfPresent(fileProperty, (k, v) -> {
-            v.add(file.toAbsolutePath().toString());
-            return v;
-        });
-        map.computeIfAbsent(fileProperty, v -> new HashSet<>(Arrays.asList(file.toAbsolutePath().toString())));
-
+        map.merge(fileProperty, new HashSet<>(Arrays.asList(file.toAbsolutePath().toString())),
+                (prev, next) -> {
+                    prev.add(file.toAbsolutePath().toString());
+                    return prev;
+                });
         return super.visitFile(file, attributes);
     }
 }
