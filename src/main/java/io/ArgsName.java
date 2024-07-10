@@ -14,8 +14,7 @@ public class ArgsName {
         }
         return value;
     }
-
-    private void parse(String[] args) {
+    private void validate(String[] args) {
         if (args.length == 0) {
             throw new IllegalArgumentException("Arguments not passed to program");
         }
@@ -38,14 +37,18 @@ public class ArgsName {
         }
     }
 
-    public static ArgsName of(String[] args) {
+    private void parse(String[] args) {
         String[] keys;
-        ArgsName names = new ArgsName();
-        names.parse(args);
         for (String arg : args) {
             keys = arg.split("=", 2);
-            names.values.put(keys[0].substring(1), keys[1]);
+            values.put(keys[0].substring(1), keys[1]);
         }
+    }
+
+    public static ArgsName of(String[] args) {
+        ArgsName names = new ArgsName();
+        names.validate(args);
+        names.parse(args);
         return names;
     }
 
