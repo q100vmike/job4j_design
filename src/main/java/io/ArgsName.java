@@ -45,7 +45,7 @@ public class ArgsName {
         for (String arg : args) {
             keys = arg.split("=", 2);
             names.values.put(keys[0].substring(1), keys[1]);
-        }
+        } 
         return names;
     }
 
