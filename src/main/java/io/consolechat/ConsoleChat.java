@@ -29,11 +29,11 @@ public class ConsoleChat {
         List<String> log = new ArrayList<>();
 
         System.out.println("Chat is started");
-        while (!question.equals(OUT)) {
+        while (!OUT.equals(question)) {
             question = in.nextLine();
-            if (question.equals(CONTINUE)) {
+            if (CONTINUE.equals(question)) {
                 stop = false;
-            } else if (question.equals(STOP)) {
+            } else if (STOP.equals(question)) {
                 stop = true;
             }
             answer = stop ? "" : getRandomAnswer();
