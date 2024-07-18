@@ -75,7 +75,7 @@ public class  CSVReader {
             System.out.println(text);
         } else {
             File file = new File("path");
-            try (PrintWriter writer = new PrintWriter(new FileWriter(path, Charset.forName("WINDOWS-1251"), true))) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(path, Charset.forName("UTF-8"), true))) {
                 writer.write(String.valueOf(text));
             } catch (IOException e) {
                 e.printStackTrace();
