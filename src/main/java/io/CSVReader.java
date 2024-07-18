@@ -30,7 +30,7 @@ public class  CSVReader {
         List<String> values = new ArrayList<>();
         boolean firstLine = true;
         int counter = 0;
-        String pattern = "\\" + delimiter + "|(\r\n)|(\n)$";
+        String pattern = "\\" + delimiter + "|(\r\n)|(\n)|(\r)$";
         StringBuilder resultCsv = new StringBuilder();
 
         validation(argsName);
