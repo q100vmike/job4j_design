@@ -1,104 +1,95 @@
 package io;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CSVReader {
+public class  CSVReader {
 
-    private List<String> filterColumns = new ArrayList<>();
+    private static List<String> filterColumns = new ArrayList<>();
 
-    private int maxColunn = 0;
-
-
-
-
-    private void validation(ArgsName argsName) {
-        File file = new File(argsName.get("path"));
-        if (!file.isFile()) {
+    private static void validation(ArgsName argsName) {
+        File filein = new File(argsName.get("path"));
+        if (!filein.isFile()) {
             throw new IllegalArgumentException("1'st argument are wrong!");
-        }
-        file = new File(argsName.get("out"));
-        if (!("stdout".equals(argsName.get("out"))) && !file.isDirectory()) {
-            throw new IllegalArgumentException("3'd argument are wrong!");
         }
     }
 
-    private void setFilterColumn(String line, String delimiter) {
-        String[] filter = line.split(delimiter);
+    private static void setFilterColumn(String line) {
+        String[] filter = line.split(",");
         filterColumns = Arrays.asList(filter);
     }
     public static void handle(ArgsName argsName) throws Exception {
         File file = new File(argsName.get("path"));
+        String delimiter = argsName.get("delimiter");
         Map<String, List<String>> csv = new HashMap<>();
         List<String> values = new ArrayList<>();
-     /*   int j = 0;
-        String[] filter = argsName.get("filter").split(",");
-        List<Integer> colNumber = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(argsName.get("path")))) {
-            while (reader.ready()) {
-                String line = reader.readLine();
-                if (line == null) break;
-                j++;
-                var scanner = new Scanner(line).useDelimiter(argsName.get("delimiter"));
-                while (scanner.hasNext()) {
-                    var column = scanner.next();
-                    if (j == 1) {
-                        for (int i = 0; i < filter.length - 1; i++) {
-                            if (column.equalsIgnoreCase(filter[i])) {
-                                colNumber.add(i);
-                            }
-                        }
-                    } else {
+        boolean firstLine = true;
+        int counter = 0;
+        String pattern = "\\" + delimiter + "|\r\n";
+        StringBuilder resultCsv = new StringBuilder();
 
-                    }
+        validation(argsName);
+        setFilterColumn(argsName.get("filter"));
+
+        try (var scanner = new Scanner(file).useDelimiter(System.lineSeparator())) {
+            String[] header = new String[0];
+            String text = "";
+            while (scanner.hasNextLine()) {
+                text = scanner.next();
+                if (firstLine) {
+                    header = text.split(delimiter);
+                    Arrays.stream(header)
+                            .toList()
+                            .forEach(s -> csv.put(s, new ArrayList<>()));
+                    firstLine = false;
+                    scanner.useDelimiter(pattern);
+                } else {
+                    csv.get(header[counter]).add(text);
+                    counter = counter == header.length - 1 ? 0 : counter + 1;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        try (var scanner = new Scanner(file).useDelimiter(System.lineSeparator())) {
-            //argsName.get("delimiter")
-            while (scanner.hasNextLine()) {
-                    String text = scanner.next();
-                Arrays.stream(text.split(";"))
-                        .forEach(s -> csv.put(s, new ArrayList<>()));
+            int length = csv.get(header[counter]).size();
 
-
-                    System.out.println(text);
-                scanner.useDelimiter(";");
-
-                //scanner.useDelimiter(";");
-                //System.out.println(scanner.next());
+            for (String col : filterColumns) {
+                resultCsv.append(col).append(delimiter);
+            }
+            resultCsv.deleteCharAt(resultCsv.length() - 1)
+                    .append(System.lineSeparator());
+            for (int j = 0; j < length; j++) {
+                for (String col : filterColumns) {
+                    resultCsv.append(csv.get(col).get(j)).append(delimiter);
+                }
+                resultCsv.deleteCharAt(resultCsv.length() - 1)
+                        .append(System.lineSeparator());
+            }
+            output(argsName.get("out"), resultCsv);
+        }
+    }
+    public static void output(String path, StringBuilder text) throws IOException {
+        if ("stdout".equals(path)) {
+            System.out.println(text);
+        } else {
+            File file = new File("path");
+            try (PrintWriter writer = new PrintWriter(new FileWriter(path, Charset.forName("WINDOWS-1251"), true))) {
+                writer.write(String.valueOf(text));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
-
     public static void main(String[] args) throws Exception {
-        /* здесь добавьте валидацию принятых параметров
-        *  -path=file.csv -delimiter=;  -out=stdout -filter=name,age
-        * */
-/*        if (args.length < 4) {
-            throw new IllegalArgumentException("Program needs 4 arguments!");
-        }
-        ArgsName argsName = ArgsName.of(args);
-
-        File file = new File(argsName.get("path"));
-        if (!file.isFile()) {
-            throw new IllegalArgumentException("1'st argument are wrong!");
-        }
-        file = new File(argsName.get("out"));
-        if (!("stdout".equals(argsName.get("out"))) && !file.isDirectory()) {
-            throw new IllegalArgumentException("3'd argument are wrong!");
-        }*/
         if (args.length < 4) {
             throw new IllegalArgumentException("Program needs 4 arguments!");
         }
-        CSVReader reader = new CSVReader();
+
         ArgsName argsName = ArgsName.of(args);
-        reader.validation(argsName);
-        reader.setFilterColumn(argsName.get("filter"), argsName.get("delimiter"));
+        validation(argsName);
+        setFilterColumn(argsName.get("filter"));
 
         handle(argsName);
     }
