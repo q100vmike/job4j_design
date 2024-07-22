@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<film>
+    <hit>true</hit>
+    <name>Alien</name>
+    <year>1979</year>
+    <genres>
+        <genre>Action</genre>
+        <genre>Horror</genre>
+    </genres>
+    <starring age="30" name="Sigourney Weaver"/>
+</film>
