@@ -28,12 +28,43 @@ public class Film {
     public Film() {
     }
 
+    public Film(String name, boolean hit, List<String> genre, int year) {
+        this.name = name;
+        this.genre = genre;
+        this.year = year;
+        this.hit = hit;
+    }
+
     public Film(String name, boolean hit, List<String> genre, int year, Person starring) {
         this.name = name;
         this.genre = genre;
         this.year = year;
         this.starring = starring;
         this.hit = hit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isHit() {
+        return hit;
+    }
+
+    public List<String> getGenre() {
+        return genre;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public Person getStarring() {
+        return starring;
+    }
+
+    public void setPerson(Person person) {
+        this.starring = person;
     }
 
     public static void main(String[] args) {
