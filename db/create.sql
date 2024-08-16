@@ -6,8 +6,7 @@ CREATE TABLE "users" (
 
 CREATE TABLE "roles" (
                          "id" serial PRIMARY KEY,
-                         "role" varchar(255),
-                         "user_id" integer
+                         "role" varchar(255)
 );
 
 CREATE TABLE "rules" (
@@ -19,7 +18,6 @@ CREATE TABLE "items" (
                          "id" serial PRIMARY KEY,
                          "item" varchar(255),
                          "user_id" integer,
-                         "actor_id" integer,
                          "category_id" integer,
                          "state_id" integer
 );
