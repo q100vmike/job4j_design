@@ -69,9 +69,9 @@ insert into orders (amount, customer_id)
 VALUES ( 86, 8);
 
 --Выполните запрос, который вернет список клиентов, возраст которых является минимальным.
-select * from customers where age = (select min(age) from customers)
+select * from customers where age = (select min(age) from customers);
 
 --Необходимо выполнить запрос, который вернет список пользователей,
 --которые еще не выполнили ни одного заказа. Используйте подзапрос, для реализации Вам понадобится NOT IN.
-select * from customers where id not in (select customer_id from orders)
+select * from customers where id not in (select customer_id from orders);
 
