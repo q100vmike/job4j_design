@@ -2,10 +2,7 @@ package jdbc;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 import java.util.StringJoiner;
 
@@ -15,25 +12,58 @@ public class TableEditor implements AutoCloseable {
 
     private Properties properties;
 
-    public TableEditor(Properties properties) {
+    public TableEditor(Properties properties) throws SQLException, ClassNotFoundException {
         this.properties = properties;
         initConnection();
     }
 
-    private void initConnection() {
-        connection = null;
+    private void initConnection() throws SQLException, ClassNotFoundException {
+        Class.forName(properties.getProperty("driver_class"));
+        connection = DriverManager.getConnection(properties.getProperty("url"),
+                properties.getProperty("login"),
+                properties.getProperty("password"));
     }
 
-    public void createTable(String tableName) {
+    public void createTable(String tableName) throws SQLException {
+            try (Statement statement = connection.createStatement()) {
+                String sql = String.format(
+                        "CREATE TABLE IF NOT EXISTS %s;",
+                        tableName
+                );
+                statement.execute(sql);
+            }
     }
 
-    public void dropTable(String tableName) {
+    public void dropTable(String tableName) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            String sql = String.format(
+                    "CREATE TABLE IF NOT EXISTS %s;",
+                    tableName
+            );
+            statement.execute(sql);
+        }
     }
 
-    public void addColumn(String tableName, String columnName, String type) {
+    public void addColumn(String tableName, String columnName, String type) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            //ALTER TABLE my_table ADD COLUMN my_field boolean;
+            String sql = String.format(
+                    "ALTER TABLE %s ADD COLUMN %s %s;",
+                    tableName, columnName, type
+            );
+            statement.execute(sql);
+        }
     }
 
-    public void dropColumn(String tableName, String columnName) {
+    public void dropColumn(String tableName, String columnName) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            //ALTER TABLE tbl_name DROP COLUMN col_name;
+            String sql = String.format(
+                    "ALTER TABLE %s DROP COLUMN %s;",
+                    tableName, columnName
+            );
+            statement.execute(sql);
+        }
     }
 
     public void renameColumn(String tableName, String columnName, String newColumnName) {
@@ -65,12 +95,16 @@ public class TableEditor implements AutoCloseable {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         Properties config = new Properties();
         try (InputStream in = TableEditor.class.getClassLoader().getResourceAsStream("app.properties")) {
             config.load(in);
         }
         TableEditor editor = new TableEditor(config);
+        String tableName = "one_way";
+        editor.createTable(tableName);
+        System.out.println(editor.getTableScheme(tableName));
+
 
     }
 }
