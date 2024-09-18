@@ -20,7 +20,7 @@ public class TableEditor implements AutoCloseable {
     private void initConnection() throws SQLException, ClassNotFoundException {
         Class.forName(properties.getProperty("driver_class"));
         connection = DriverManager.getConnection(properties.getProperty("url"),
-                properties.getProperty("login"),
+                properties.getProperty("username"),
                 properties.getProperty("password"));
     }
 
@@ -104,7 +104,6 @@ public class TableEditor implements AutoCloseable {
         String tableName = "one_way";
         editor.createTable(tableName);
         System.out.println(editor.getTableScheme(tableName));
-
 
     }
 }
