@@ -1,6 +1,5 @@
 package jdbc;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
@@ -24,49 +23,50 @@ public class TableEditor implements AutoCloseable {
                 properties.getProperty("password"));
     }
 
+    public void executeSql(String sql) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        }
+    }
+
     public void createTable(String tableName) throws SQLException {
-            try (Statement statement = connection.createStatement()) {
-                String sql = String.format(
-                        "CREATE TABLE IF NOT EXISTS %s;",
-                        tableName
-                );
-                statement.execute(sql);
-            }
+        String sql = String.format(
+                "CREATE TABLE IF NOT EXISTS %s();",
+                tableName
+        );
+        executeSql(sql);
     }
 
     public void dropTable(String tableName) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "CREATE TABLE IF NOT EXISTS %s;",
-                    tableName
-            );
-            statement.execute(sql);
-        }
+        String sql = String.format(
+                "DROP TABLE IF EXISTS %s;",
+                tableName
+        );
+        executeSql(sql);
     }
 
     public void addColumn(String tableName, String columnName, String type) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            //ALTER TABLE my_table ADD COLUMN my_field boolean;
-            String sql = String.format(
-                    "ALTER TABLE %s ADD COLUMN %s %s;",
-                    tableName, columnName, type
-            );
-            statement.execute(sql);
-        }
+        String sql = String.format(
+                "ALTER TABLE %s ADD COLUMN %s %s;",
+                tableName, columnName, type
+        );
+        executeSql(sql);
     }
 
     public void dropColumn(String tableName, String columnName) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            //ALTER TABLE tbl_name DROP COLUMN col_name;
-            String sql = String.format(
-                    "ALTER TABLE %s DROP COLUMN %s;",
-                    tableName, columnName
-            );
-            statement.execute(sql);
-        }
+        String sql = String.format(
+                "ALTER TABLE %s DROP COLUMN %s;",
+                tableName, columnName
+        );
+        executeSql(sql);
     }
 
-    public void renameColumn(String tableName, String columnName, String newColumnName) {
+    public void renameColumn(String tableName, String columnName, String newColumnName) throws SQLException {
+        String sql = String.format(
+                "ALTER TABLE %s RENAME COLUMN %s TO %s;",
+                tableName, columnName, newColumnName
+        );
+        executeSql(sql);
     }
 
     public String getTableScheme(String tableName) throws Exception {
@@ -96,14 +96,28 @@ public class TableEditor implements AutoCloseable {
     }
 
     public static void main(String[] args) throws Exception {
+        String tableName = "one_way";
+        String column = "id";
+        String newcolumn = "uid";
+        String coltype = "integer";
         Properties config = new Properties();
         try (InputStream in = TableEditor.class.getClassLoader().getResourceAsStream("app.properties")) {
             config.load(in);
         }
         TableEditor editor = new TableEditor(config);
-        String tableName = "one_way";
+
         editor.createTable(tableName);
         System.out.println(editor.getTableScheme(tableName));
 
+        editor.addColumn(tableName, column, coltype);
+        System.out.println(editor.getTableScheme(tableName));
+
+        editor.renameColumn(tableName, column, newcolumn);
+        System.out.println(editor.getTableScheme(tableName));
+
+        editor.dropColumn(tableName, newcolumn);
+        System.out.println(editor.getTableScheme(tableName));
+
+        editor.dropTable(tableName);
     }
 }
