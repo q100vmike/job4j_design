@@ -2,8 +2,9 @@ package collection;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import newcoll.tree.Queue;
 
-public class SimpleQueue<T> {
+public class SimpleQueue<T> implements Queue<T> {
     private final SimpleStack<T> input = new SimpleStack<>();
     private final SimpleStack<T> output = new SimpleStack<>();
 
