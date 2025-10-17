@@ -12,6 +12,14 @@ public class Node<E> {
         this.value = value;
     }
 
+    public E getValue() {
+        return value;
+    }
+
+    public List<Node<E>> getChildren() {
+        return children;
+    }
+
     @SafeVarargs
     public Node(E value, Node<E>... children) {
         this.value = value;
@@ -22,6 +30,4 @@ public class Node<E> {
     public String toString() {
         return String.format("Node{ %s }", value);
     }
-
-    /* геттеры и сеттеры*/
 }

@@ -1,31 +1,51 @@
 package newcoll.tree;
 
-import newcoll.tree.Queue;
 import collection.SimpleQueue;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TreeUtils<T> {
 
-    /**
-     * Метод выполняет обход дерева и считает количество узлов
-     * @param root корневой узел дерева
-     * @return количество узлов
-     * @throws IllegalArgumentException если root является null
-     */
     public int countNode(Node<T> root) {
+        if (root == null) {
+            throw new IllegalArgumentException();
+        }
+        int count = 0;
+        Node<T> node;
         Queue<Node<T>> queue = new SimpleQueue<>();
-        /*TODO реализуйте метод.*/
-        return 0;
+        queue.push(root);
+
+        while (queue.size() > 0) {
+            node = queue.poll();
+            count++;
+            if (node.getChildren().size() > 0) {
+                for (Node<T> child : node.getChildren()) {
+                    queue.push(child);
+                }
+            }
+        }
+        return count;
     }
 
-    /**
-     * Метод выполняет обход дерева и возвращает коллекцию ключей узлов дерева
-     * @param root корневой узел
-     * @return коллекция с ключами, реализующая интерфейс Iterable<E>
-     * @throws IllegalArgumentException если root является null
-     */
     public Iterable<T> findAll(Node<T> root) {
+        if (root == null) {
+            throw new IllegalArgumentException();
+        }
+        List<T> roots = new ArrayList<>();
+        Node<T> node;
         Queue<Node<T>> queue = new SimpleQueue<>();
-        /*TODO реализуйте метод.*/
-        return null;
+        queue.push(root);
+        roots.add(root.getValue());
+
+        while (queue.size() > 0) {
+            node = queue.poll();
+            if (node.getChildren().size() > 0) {
+                for (Node<T> child : node.getChildren()) {
+                    queue.push(child);
+                    roots.add(child.getValue());
+                }
+            }
+        }
+        return roots;
     }
 }

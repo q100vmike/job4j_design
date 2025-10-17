@@ -10,6 +10,11 @@ public class SimpleQueue<T> implements Queue<T> {
 
     private int counter;
 
+    public int getCounter() {
+        return counter;
+    }
+
+    @Override
     public T poll() {
         if (counter == 0) {
             throw new NoSuchElementException("Queue is empty");
@@ -18,6 +23,11 @@ public class SimpleQueue<T> implements Queue<T> {
         return input.pop();
     }
 
+    @Override
+    public int size() {
+        return getCounter();
+    }
+    @Override
     public void push(T value) {
         counter++;
         if (counter == 1) {
