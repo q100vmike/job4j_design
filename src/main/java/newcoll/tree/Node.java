@@ -16,8 +16,20 @@ public class Node<E> {
         return value;
     }
 
+    public void setValue(E value) {
+        value = value;
+    }
+
     public List<Node<E>> getChildren() {
         return children;
+    }
+
+    public void setChildren(List<Node<E>> children) {
+        if (children != null) {
+            this.children.addAll(children);
+        } else {
+            this.children = null;
+        }
     }
 
     @SafeVarargs

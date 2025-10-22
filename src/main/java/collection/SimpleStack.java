@@ -9,6 +9,11 @@ public class SimpleStack<T> {
     }
 
     public void push(T value) {
+
         linked.addFirst(value);
+    }
+
+    public int size() {
+        return  linked.getSize();
     }
 }
