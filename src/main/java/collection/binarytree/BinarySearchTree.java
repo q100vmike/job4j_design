@@ -26,14 +26,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
                 node.setLeft(newNode);
                 result = true;
             } else {
-                result = this.put((Node) node.getLeft(), key);
+                result = this.put(node.left, key);
             }
         } else {
             if (Objects.isNull(node.getRight())) {
                 node.setRight(newNode);
                 result = true;
             } else {
-                result = this.put((Node) node.getRight(), key);
+                result = this.put(node.right, key);
             }
         }
 
@@ -50,11 +50,11 @@ public class BinarySearchTree<T extends Comparable<T>> {
         if (!node.key.equals(key)) {
             if (key.compareTo(node.key) < 0) {
                  if (!Objects.isNull(node.getLeft())) {
-                    result = find((Node) node.getLeft(), key);
+                    result = find(node.left, key);
                 }
             } else {
                 if (!Objects.isNull(node.getRight())) {
-                    result = find((Node) node.getRight(), key);
+                    result = find(node.right, key);
                 }
             }
         } else {
@@ -84,23 +84,33 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     public List<T> inPreOrder() {
-        //TODO реализуйте метод
-        return null;
+        List<T> result = new ArrayList<>();
+        Node node = root;
+        return inPreOrder(node, result);
     }
 
     private List<T> inPreOrder(Node localRoot, List<T> list) {
-        //TODO реализуйте метод
-        return null;
+        if (localRoot != null) {
+            list.add(localRoot.key);
+            inPreOrder(localRoot.left, list);
+            inPreOrder(localRoot.right, list);
+        }
+        return list;
     }
 
     public List<T> inPostOrder() {
-        //TODO реализуйте метод
-        return null;
+        List<T> result = new ArrayList<>();
+        Node node = root;
+        return inPostOrder(node, result);
     }
 
     private List<T> inPostOrder(Node localRoot, List<T> list) {
-        //TODO реализуйте метод
-        return null;
+        if (localRoot != null) {
+            inPostOrder(localRoot.left, list);
+            inPostOrder(localRoot.right, list);
+            list.add(localRoot.key);
+        }
+        return list;
     }
 
     public T minimum() {
@@ -108,8 +118,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     private Node minimum(Node node) {
-        //TODO реализуйте метод
-        return null;
+        Node min = null;
+
+        if (!Objects.isNull(node.getLeft())) {
+            min = minimum(node.left);
+        } else {
+            min = node;
+        }
+        return min;
     }
 
     public T maximum() {
@@ -117,8 +133,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     private Node maximum(Node node) {
-        //TODO реализуйте метод
-        return null;
+        Node max = null;
+
+        if (!Objects.isNull(node.getRight())) {
+            max = maximum((Node) node.getRight());
+        } else {
+            max = node;
+        }
+        return max;
     }
 
     @Override
