@@ -106,7 +106,7 @@ class BinarySearchTreeTest {
             tree.put(element);
         }
         tree.remove(6);
-        assertThat(tree.inPostOrder()).hasSize(7)
+        assertThat(tree.inPostOrder()).hasSize(6)
                 .containsExactly(1, 3, 2, 5, 7, 4);
     }
 
