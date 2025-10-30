@@ -146,6 +146,21 @@ public class BinarySearchTree<T extends Comparable<T>> {
         return result;
     }
 
+    public void clear() {
+        Node node = root;
+        clear(node);
+    }
+
+    private void clear(Node first) {
+        if (first != null) {
+            clear(first.left);
+            clear(first.right);
+            first.key = null;
+            first.right = null;
+            first.left = null;
+        }
+    }
+
     private boolean remove(Node source, T key) {
         boolean result = true;
         Node current = source;

@@ -2,6 +2,10 @@ package collection.binarytree;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
 import static org.assertj.core.api.Assertions.*;
 
 class BinarySearchTreeTest {
@@ -119,5 +123,19 @@ class BinarySearchTreeTest {
         tree.remove(6);
         assertThat(tree.inPostOrder()).hasSize(16)
                 .containsExactly(1, 3, 5, 4, 9, 8, 7, 11, 13, 12, 15, 17, 16, 14, 10, 2);
+    }
+
+    @Test
+    void whenClearOk() {
+        List<Integer> result;
+        BinarySearchTree<Integer> tree = new BinarySearchTree<>();
+        for (int element : new int[]{4, 2, 6, 3, 5, 7, 1}) {
+            tree.put(element);
+        }
+        tree.clear();
+        assertThat(tree.inPostOrder()).hasSize(1);
+        result = Collections.singletonList(tree.inPostOrder().get(0));
+        assertThat(result.get(0)).isNull();
+
     }
 }
