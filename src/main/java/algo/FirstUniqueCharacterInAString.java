@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class FirstUniqueCharacterInAString {
 
-    public int firstUniqChar(String s) {
+    public int firstUniqCharMap(String s) {
         Map<Character, Integer> map = new HashMap<>();
 
         for (int i = 0; i < s.length(); i++) {
@@ -18,11 +18,32 @@ public class FirstUniqueCharacterInAString {
                 return i;
             }
         }
+       return -1;
+    }
 
+    public int firstUniqChar(String s) {
+        int frq  = 0;
+        int i = 0;
 
+        for (i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (frq == 1) {
+                return i - 1;
+            } else {
+                frq = 0;
+            }
+            for (int j = s.length() - 1; j >= 0; j--) {
+                char k = s.charAt(j);
+                if (frq > 1) {
+                    continue;
+                }
+                if (c == k) {
+                    frq++;
+                }
+            }
+        }
 
-
-        return -1;
+        return frq == 1 ? i - 1 : -1;
     }
 }
 
